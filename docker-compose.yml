@@ -1,0 +1,62 @@
+version: '3.1'
+volumes:
+  grafana_data: {}
+services:
+  influxdb:
+    image: influxdb:1.7.11
+    restart: always
+    environment:
+      - PRE_CREATE_DB=cadvisor
+      - INFLUXDB_DB=cadvisor
+      - INFLUXDB_ADMIN_USER=root
+      - INFLUXDB_ADMIN_PASSWORD=rootroot
+    ports:
+      - "8086:8086"
+    expose:
+      - "8090"
+      - "8099"
+    volumes:
+      - ./data/influxdb:/data
+  cadvisor:
+    image: google/cadvisor
+    links:
+      - influxdb:influxdb-host
+    command: -storage_driver=influxdb -storage_driver_db=cadvisor -storage_driver_host=influxdb-host:8086
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+  grafana:
+    user: "104"
+    image: grafana/grafana
+    restart: always
+    links:
+      - influxdb:influxdb-host
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/data
+    environment:
+      - HTTP_USER=admin
+      - HTTP_PASS=admin
+      - INFLUXDB_HOST=influxdb-host
+      - INFLUXDB_PORT=8086
+      - INFLUXDB_NAME=cadvisor
+      - INFLUXDB_USER=root
+      - INFLUXDB_PASS=rootroot
+  chronograf:
+    image: chronograf:latest
+    ports:
+      - '127.0.0.1:8888:8888'
+    volumes:
+      - ./data/chronograf-storage:/var/lib/chronograf
+    depends_on:
+      - influxdb
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_USERNAME=root
+      - INFLUXDB_PASSWORD=rootroot
