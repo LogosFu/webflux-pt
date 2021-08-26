@@ -9,5 +9,4 @@ class WebfluxApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }
