@@ -20,16 +20,24 @@ repositories {
 
 ext {
     set('springCloudVersion', "2020.0.3")
+    set('feignReactorVersion',"3.1.1")
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux:2.5.4'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.0.3'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:2.5.4'
+    implementation "com.playtika.reactivefeign:feign-reactor-webclient:${feignReactorVersion}"
+    implementation "com.playtika.reactivefeign:feign-reactor-cloud:${feignReactorVersion}"
+    implementation "com.playtika.reactivefeign:feign-reactor-spring-configuration:${feignReactorVersion}"
+    implementation 'io.github.openfeign:feign-slf4j:11.2'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools:2.5.4'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
     testImplementation 'io.projectreactor:reactor-test:3.4.9'
+    testImplementation 'com.github.tomakehurst:wiremock:2.27.2'
+    testImplementation 'junit:junit:4.12'
 }
 
 dependencyManagement {
@@ -41,3 +49,4 @@ dependencyManagement {
 test {
     useJUnitPlatform()
 }
+apply plugin: 'java'
