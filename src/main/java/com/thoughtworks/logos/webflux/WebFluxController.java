@@ -24,6 +24,6 @@ public class WebFluxController {
 
     @GetMapping("/feign/{param}")
     public Mono<String> callReactiveFeignClient(@PathVariable long param) {
-        return webFluxReactiveFeignClient.getMessage();
+        return webFluxReactiveFeignClient.getMessage(param);
     }
 }
