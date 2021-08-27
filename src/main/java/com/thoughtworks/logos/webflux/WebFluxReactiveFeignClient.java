@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import reactivefeign.spring.config.ReactiveFeignClient;
 import reactor.core.publisher.Mono;
 
-@ReactiveFeignClient(name = "webFluxReactiveFeignClient", url = "localhost:18080")
+@ReactiveFeignClient(name = "webFluxReactiveFeignClient", url = "mocker-service:18086")
 public interface WebFluxReactiveFeignClient {
     @GetMapping("/async/delay/{param}")
     Mono<String> getMessage(@PathVariable Long param);

@@ -60,3 +60,17 @@ services:
       - INFLUXDB_URL=http://influxdb:8086
       - INFLUXDB_USERNAME=root
       - INFLUXDB_PASSWORD=rootroot
+  mocker-service:
+    image: webflux:0.0.1-SNAPSHOT
+    ports:
+      - "18080:18086"
+    environment:
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms1024m -Xmx2048m -Xmn256m -Xss256k
+  press-service:
+    image: webflux:0.0.1-SNAPSHOT
+    depends_on:
+      - mocker-service
+    ports:
+      - "18086:18086"
+    environment:
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms1024m -Xmx1024m -Xmn256m -Xss256k
