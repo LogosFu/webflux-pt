@@ -56,4 +56,18 @@ class WebFluxControllerTest {
         assertThat(delays1.getValue()).isEqualTo(1L);
         assertThat(delays2.getValue()).isEqualTo(2L);
     }
+
+    @Test
+    void should_return_message_merged_with_comma_when_normal_complex_call() {
+        //given
+        ArgumentCaptor<Long> delays1 = ArgumentCaptor.forClass(Long.class);
+        ArgumentCaptor<Long> delays2 = ArgumentCaptor.forClass(Long.class);
+        when(complexCallService.complexCallByNormal(1L, 2L)).thenReturn("Test1,Test2");
+        testClient.get().uri("/normal/1/2").exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class).isEqualTo("Test1,Test2");
+        Mockito.verify(complexCallService).complexCallByNormal(delays1.capture(), delays2.capture());
+        assertThat(delays1.getValue()).isEqualTo(1L);
+        assertThat(delays2.getValue()).isEqualTo(2L);
+    }
 }
