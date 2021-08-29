@@ -1,4 +1,4 @@
-package com.thoughtworks.logos.webflux;
+package com.thoughtworks.logos.webflux.component;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
