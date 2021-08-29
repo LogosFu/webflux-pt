@@ -10,6 +10,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.concurrent.ExecutionException;
+
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
@@ -50,6 +52,22 @@ class ComplexCallServiceTest {
 
         //when
         String messageReturn = complexCallService.complexCallByNormal(1, 2);
+
+        //then
+        verify(normalFeignClient, times(2)).getMessage(delays.capture());
+        assertThat(delays.getAllValues()).isEqualTo(asList(1L, 2L));
+        assertThat(messageReturn).isEqualTo("Test1,Test2");
+    }
+
+    @Test
+    void should_return_merge_message_when_normal_async_complex_call() throws ExecutionException, InterruptedException {
+        //given
+        ArgumentCaptor<Long> delays = ArgumentCaptor.forClass(Long.class);
+        when(normalFeignClient.getMessage(1L)).thenReturn("Test1");
+        when(normalFeignClient.getMessage(2L)).thenReturn("Test2");
+
+        //when
+        String messageReturn = complexCallService.complexCallByNormalAsync(1, 2);
 
         //then
         verify(normalFeignClient, times(2)).getMessage(delays.capture());
