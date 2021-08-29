@@ -2,6 +2,7 @@ package com.thoughtworks.logos.webflux.web;
 
 import com.thoughtworks.logos.webflux.component.NormalFeignClient;
 import com.thoughtworks.logos.webflux.component.WebFluxReactiveFeignClient;
+import com.thoughtworks.logos.webflux.service.ComplexCallService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,10 +15,12 @@ public class WebFluxController {
 
     private final WebFluxReactiveFeignClient webFluxReactiveFeignClient;
     private final NormalFeignClient normalFeignClient;
+    private final ComplexCallService complexCallService;
 
-    public WebFluxController(WebFluxReactiveFeignClient webFluxReactiveFeignClient, NormalFeignClient normalFeignClient) {
+    public WebFluxController(WebFluxReactiveFeignClient webFluxReactiveFeignClient, NormalFeignClient normalFeignClient, ComplexCallService complexCallService) {
         this.webFluxReactiveFeignClient = webFluxReactiveFeignClient;
         this.normalFeignClient = normalFeignClient;
+        this.complexCallService = complexCallService;
     }
 
     @GetMapping("/async/delay/{param}")
@@ -26,14 +29,19 @@ public class WebFluxController {
                 .delayElement(Duration.ofSeconds(param));
     }
 
-    @GetMapping("/feign/{param}")
+    @GetMapping("/reactive/{param}")
     public Mono<String> callReactiveFeignClient(@PathVariable long param) {
         return webFluxReactiveFeignClient.getMessage(param);
     }
 
-    @GetMapping("/normal-feign/{param}")
+    @GetMapping("/normal/{param}")
     public String callNormalFeignClient(@PathVariable long param) {
         return normalFeignClient.getMessage(param);
+    }
+
+    @GetMapping("/reactive/{delay1}/{delay2}")
+    public Mono<String> complexCallNormal(@PathVariable long delay1, @PathVariable long delay2) {
+        return complexCallService.complexCallByReactive(delay1, delay2);
     }
 
 }

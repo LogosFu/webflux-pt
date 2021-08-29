@@ -26,7 +26,6 @@ class ComplexCallServiceTest {
     void should_return_merge_message_when_complex_call() {
         //given
         ArgumentCaptor<Long> delays = ArgumentCaptor.forClass(Long.class);
-        ArgumentCaptor<Long> delays2 = ArgumentCaptor.forClass(Long.class);
         when(webFluxReactiveFeignClient.getMessage(1L)).thenReturn(Mono.justOrEmpty("Test1"));
         when(webFluxReactiveFeignClient.getMessage(2L)).thenReturn(Mono.justOrEmpty("Test2"));
 
