@@ -11,9 +11,11 @@ import java.time.Duration;
 public class WebFluxController {
 
     private final WebFluxReactiveFeignClient webFluxReactiveFeignClient;
+    private final NormalFeignClient normalFeignClient;
 
-    public WebFluxController(WebFluxReactiveFeignClient webFluxReactiveFeignClient) {
+    public WebFluxController(WebFluxReactiveFeignClient webFluxReactiveFeignClient, NormalFeignClient normalFeignClient) {
         this.webFluxReactiveFeignClient = webFluxReactiveFeignClient;
+        this.normalFeignClient = normalFeignClient;
     }
 
     @GetMapping("/async/delay/{param}")
@@ -26,4 +28,10 @@ public class WebFluxController {
     public Mono<String> callReactiveFeignClient(@PathVariable long param) {
         return webFluxReactiveFeignClient.getMessage(param);
     }
+
+    @GetMapping("/normal-feign/{param}")
+    public String callNormalFeignClient(@PathVariable long param) {
+        return normalFeignClient.getMessage(param);
+    }
+
 }
