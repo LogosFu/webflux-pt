@@ -26,7 +26,6 @@ class WebFluxControllerTest {
 
     @MockBean
     private WebFluxReactiveFeignClient webFluxReactiveFeignClient;
-
     @MockBean
     private ComplexCallService complexCallService;
     @Autowired
