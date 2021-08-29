@@ -37,10 +37,11 @@ public class ComplexCallService {
     }
 
     public String complexCallByNormalAsync(long delayOne, long delayTwo) throws ExecutionException, InterruptedException {
-        CompletableFuture<Void> all = CompletableFuture.allOf(
-                CompletableFuture.supplyAsync(() -> normalFeignClient.getMessage(delayOne)),
-                CompletableFuture.supplyAsync(() -> normalFeignClient.getMessage(delayTwo)));
+//        Future<String> callBackendFuture1 =
+        CompletableFuture<String> delay1 = CompletableFuture.supplyAsync(() -> normalFeignClient.getMessage(delayOne));
+        CompletableFuture<String> delay2 = CompletableFuture.supplyAsync(() -> normalFeignClient.getMessage(delayTwo));
+        CompletableFuture<Void> all = CompletableFuture.allOf(delay1, delay2);
         all.get();
-        return CompletableFuture.supplyAsync(() -> normalFeignClient.getMessage(delayOne)).get() + "," + CompletableFuture.supplyAsync(() -> normalFeignClient.getMessage(delayTwo)).get();
+        return delay1.get() + "," + delay2.get();
     }
 }

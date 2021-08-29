@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 public class WebFluxController {
@@ -47,6 +48,11 @@ public class WebFluxController {
     @GetMapping("/normal/{delay1}/{delay2}")
     public String complexCallNormal(@PathVariable long delay1, @PathVariable long delay2) {
         return complexCallService.complexCallByNormal(delay1, delay2);
+    }
+
+    @GetMapping("/async/{delay1}/{delay2}")
+    public String complexCallAsync(@PathVariable long delay1, @PathVariable long delay2) throws ExecutionException, InterruptedException {
+        return complexCallService.complexCallByNormalAsync(delay1, delay2);
     }
 
 }

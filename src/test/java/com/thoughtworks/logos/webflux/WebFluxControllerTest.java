@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.util.concurrent.ExecutionException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -67,6 +69,20 @@ class WebFluxControllerTest {
                 .expectStatus().isOk()
                 .expectBody(String.class).isEqualTo("Test1,Test2");
         Mockito.verify(complexCallService).complexCallByNormal(delays1.capture(), delays2.capture());
+        assertThat(delays1.getValue()).isEqualTo(1L);
+        assertThat(delays2.getValue()).isEqualTo(2L);
+    }
+
+    @Test
+    void should_return_message_merged_with_comma_when_normal_async_complex_call() throws ExecutionException, InterruptedException {
+        //given
+        ArgumentCaptor<Long> delays1 = ArgumentCaptor.forClass(Long.class);
+        ArgumentCaptor<Long> delays2 = ArgumentCaptor.forClass(Long.class);
+        when(complexCallService.complexCallByNormalAsync(1L, 2L)).thenReturn("Test1,Test2");
+        testClient.get().uri("/async/1/2").exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class).isEqualTo("Test1,Test2");
+        Mockito.verify(complexCallService).complexCallByNormalAsync(delays1.capture(), delays2.capture());
         assertThat(delays1.getValue()).isEqualTo(1L);
         assertThat(delays2.getValue()).isEqualTo(2L);
     }
