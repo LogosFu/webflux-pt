@@ -25,3 +25,19 @@ mocker-service:
 #bookstore-server:
 #  ribbon:
 #    listOfServers: http://localhost:8080
+spring:
+  application:
+    name: webflux
+#management.endpoints.web.exposure.include = prometheus
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  health:
+    db:
+      enabled: false
+#management.metrics.tags.application = ${spring.application.name}

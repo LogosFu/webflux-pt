@@ -18,7 +18,7 @@ services:
     volumes:
       - ./data/influxdb:/data
   cadvisor:
-    image: google/cadvisor
+    image: gcr.io/cadvisor/cadvisor
     links:
       - influxdb:influxdb-host
     command: -storage_driver=influxdb -storage_driver_db=cadvisor -storage_driver_host=influxdb-host:8086
@@ -36,10 +36,13 @@ services:
     restart: always
     links:
       - influxdb:influxdb-host
+      - prometheus:prometheus-host
     ports:
       - "3000:3000"
     volumes:
       - grafana_data:/var/lib/data
+    depends_on:
+      - prometheus
     environment:
       - HTTP_USER=admin
       - HTTP_PASS=admin
@@ -62,6 +65,9 @@ services:
       - INFLUXDB_PASSWORD=rootroot
   mocker-service:
     image: webflux:0.0.1-SNAPSHOT
+    environment:
+      - TZ=Asia/Shanghai
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms800m -Xmx800m -Xmn256m -Xss256k -XX:SurvivorRatio=8 -XX:+UseConcMarkSweepGC
     ports:
       - "18080:18086"
   press-service:
@@ -70,3 +76,31 @@ services:
       - mocker-service
     ports:
       - "18086:18086"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 800M
+  prometheus:
+    image: prom/prometheus:v2.1.0
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - "9090:9090"
+    links:
+      - cadvisor:cadvisor-host
+      - press-service:press-service-host
+    depends_on:
+      - cadvisor
+      - press-service
+    restart: always
+
+

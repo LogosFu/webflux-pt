@@ -25,12 +25,16 @@ ext {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux:2.5.4'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:2.5.4'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.0.3'
     implementation 'org.springframework.boot:spring-boot-starter-webflux:2.5.4'
     implementation "com.playtika.reactivefeign:feign-reactor-webclient:${feignReactorVersion}"
     implementation "com.playtika.reactivefeign:feign-reactor-cloud:${feignReactorVersion}"
     implementation "com.playtika.reactivefeign:feign-reactor-spring-configuration:${feignReactorVersion}"
     implementation 'io.github.openfeign:feign-slf4j:11.2'
+    // https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus
+    implementation 'io.micrometer:micrometer-registry-prometheus:1.8.1'
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools:2.5.4'
     annotationProcessor 'org.projectlombok:lombok'

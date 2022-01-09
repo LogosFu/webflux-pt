@@ -45,6 +45,11 @@ public class WebFluxController {
         return complexCallService.complexCallByReactive(delay1, delay2);
     }
 
+    @GetMapping("/block/{delay1}/{delay2}")
+    public Mono<String> complexCallReactiveBlock(@PathVariable long delay1, @PathVariable long delay2) {
+        return complexCallService.complexCallByReactiveBlock(delay1, delay2);
+    }
+
     @GetMapping("/normal/{delay1}/{delay2}")
     public String complexCallNormal(@PathVariable long delay1, @PathVariable long delay2) {
         return complexCallService.complexCallByNormal(delay1, delay2);
