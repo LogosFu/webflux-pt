@@ -13,4 +13,11 @@ public class BlockedThreadService {
             Mono.just("Start").log().subscribe();
         }
     }
+
+    @Async()
+    public Mono<Void> noBlockedThread() {
+        while (true) {
+            Mono.just("Start").log("no blocked").subscribe();
+        }
+    }
 }

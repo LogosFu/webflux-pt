@@ -60,4 +60,15 @@ public class WebFluxController {
         return complexCallService.complexCallByNormalAsync(delay1, delay2);
     }
 
+    @GetMapping("/log")
+    public Mono<Void> blockedThread() throws ExecutionException, InterruptedException {
+        return complexCallService.startLogThread();
+    }
+
+    @GetMapping("/log/name")
+    public Mono<Void> noBlockedThread() throws ExecutionException, InterruptedException {
+        return complexCallService.startLogWithNameThread();
+    }
+
+
 }

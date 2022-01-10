@@ -28,6 +28,9 @@ mocker-service:
 spring:
   application:
     name: webflux
+  reactor:
+    debug-agent:
+      enabled: off
 #management.endpoints.web.exposure.include = prometheus
 management:
   endpoints:

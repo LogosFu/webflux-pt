@@ -57,7 +57,15 @@ public class ComplexCallService {
     }
 
     public Mono<Void> startLogThread() {
-        blockedThreadService.blockedThread();
+        for (int i = 0; i < 10; i++) {
+            blockedThreadService.blockedThread();
+        }
+        return Mono.empty();
+    }
+    public Mono<Void> startLogWithNameThread() {
+        for (int i = 0; i < 100000; i++) {
+            blockedThreadService.noBlockedThread();
+        }
         return Mono.empty();
     }
 }
